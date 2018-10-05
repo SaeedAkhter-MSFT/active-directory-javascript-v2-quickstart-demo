@@ -15,7 +15,7 @@
 
 <script>
     var applicationConfig = {
-        clientID: "4b83aba0-1f07-4aab-8f43-0e1777d46b9b",
+        clientID: "905d5e76-2d83-46c4-8755-7705925775c2",
         graphScopes: ["https://contosoent.onmicrosoft.com/OldTodoListService/.default"],
         graphEndpoint: "https://oldtodolistservice.azurewebsites.net/api/todolist"
     };
@@ -43,13 +43,13 @@
         //Call acquireTokenSilent (iframe) to obtain a token for Microsoft Graph
         // here you can only silently request scopes for one resource at a time
         myMSALObj.acquireTokenSilent(applicationConfig.graphScopes).then(function (accessToken) {
-            callMSGraph(applicationConfig.graphEndpoint, accessToken, graphAPICallback);
+            postAPI(applicationConfig.graphEndpoint, accessToken, graphAPICallback);
         }, function (error) {
             console.log(error);
             // Call acquireTokenPopup (popup window) in case of acquireTokenSilent failure due to consent or interaction required ONLY
             if (error.indexOf("consent_required") !== -1 || error.indexOf("interaction_required") !== -1 || error.indexOf("login_required") !== -1) {
                 myMSALObj.acquireTokenPopup(applicationConfig.graphScopes).then(function (accessToken) {
-                    callMSGraph(applicationConfig.graphEndpoint, accessToken, graphAPICallback);
+                    postAPI(applicationConfig.graphEndpoint, accessToken, graphAPICallback);
                 }, function (error) {
                     console.log(error);
                 });
@@ -63,13 +63,14 @@
             if (this.readyState == 4 && this.status == 200)
                 callback(JSON.parse(this.responseText));
         }
-        alert(theUrl);
+
         xmlHttp.open("GET", theUrl, true); // true for asynchronous
         xmlHttp.setRequestHeader('Authorization', 'Bearer ' + accessToken);
         xmlHttp.send();
     }
 
     function postAPI(theUrl, accessToken, callback) {
+        alert("Try posting: Be+sure+to+demo+calling+APIs");
         var xmlHttp = new XMLHttpRequest();
         xmlHttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200)
@@ -83,6 +84,7 @@
         xmlHttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         xmlHttp.setRequestHeader('Authorization', 'Bearer ' + accessToken);
         xmlHttp.send("Title=Be+sure+to+demo+calling+APIs");
+        alert("POSTED: Be+sure+to+demo+calling+APIs");
     }
 
     function graphAPICallback(data) {
@@ -104,7 +106,7 @@
     function acquireTokenRedirectAndCallMSGraph() {
         //Call acquireTokenSilent (iframe) to obtain a token for Microsoft Graph
         myMSALObj.acquireTokenSilent(applicationConfig.graphScopes).then(function (accessToken) {
-          callMSGraph(applicationConfig.graphEndpoint, accessToken, graphAPICallback);
+          postAPI(applicationConfig.graphEndpoint, accessToken, graphAPICallback);
         }, function (error) {
             console.log(error);
             //Call acquireTokenRedirect in case of acquireToken Failure
